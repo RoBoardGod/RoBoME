@@ -14,6 +14,9 @@ RoBoME is a tool to use RoBoIO to control RC servos on RoBoard. It is
 designed for people with little or no programming experience. We have 
 tried to make it be used as easily as possible. 
 
-2013/1/11 RoBoME version 0.01 
-2013/1/17 RoBoME version 0.02
-	Increase the function of the sound.
+2013/1/11 RoBoME version 1.01 
+	Release RoBoME.
+2013/1/17 RoBoME version 1.02
+	Increase sound function.
+2013/1/24 RoBoME version 1.02
+	Increase offset and goto function.

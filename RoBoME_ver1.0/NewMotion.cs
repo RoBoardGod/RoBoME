@@ -94,7 +94,7 @@ namespace RoBoME_ver1._0
         }
         public void numbercheck(object sender, KeyPressEventArgs e)
         {    //Text number check
-            if (((int)e.KeyChar < 48 | (int)e.KeyChar > 57) & (int)e.KeyChar != 8)
+            if (((int)e.KeyChar < 48 | (int)e.KeyChar > 57) & (int)e.KeyChar != 8 & (int)e.KeyChar != 189)
             {
                 e.Handled = true;
             }

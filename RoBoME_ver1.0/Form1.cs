@@ -723,7 +723,7 @@ namespace RoBoME_ver1._0
         }
         private void Motionlist_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (Motionlist.SelectedItem != null) {
+            if (Motionlist.SelectedItem != null && (MotionTest.Enabled || onPC)) {
                 groupBox1.Enabled = true;
                 string[] datas = Motionlist.SelectedItem.ToString().Split(' ');
                 if (String.Compare(datas[0], "[Frame]") == 0)
@@ -1079,7 +1079,7 @@ namespace RoBoME_ver1._0
             if(!RoBoIO.rcservo_Init(usepin))
                 MessageBox.Show("RC servo init fail. Error message:" + RoBoIO.roboio_GetErrMsg());
         }
-        private void MotionTest_KeyDown(object sender, KeyEventArgs e)
+        private void Motionlist_KeyDown(object sender, KeyEventArgs e)
         {
             string a, b;
             if (e.Modifiers == Keys.Control)
@@ -1104,20 +1104,26 @@ namespace RoBoME_ver1._0
                 b = "Left";
             else if (e.KeyCode == Keys.Right)
                 b = "Right";
+            else if (e.KeyCode == Keys.Escape)
+                b = "ESC";
             else
                 b = "";
 
             if (String.Compare(a, "") != 0 && String.Compare(b, "") != 0)
-                motiontestkey=(a + "+" + b);
+                motiontestkey = (a + "+" + b);
             else if (String.Compare(b, "") != 0)
-                motiontestkey=(b);
+                motiontestkey = (b);
             else if (String.Compare(b, "") == 0)
-                motiontestkey=(a);
-            motiontestkey ="";
+                motiontestkey = (a);
+            else
+                motiontestkey = "";
         }
-        private void MotionTest_Click(object sender, EventArgs e)
+        private void Motionlist_KeyUp(object sender, KeyEventArgs e)
         {
             motiontestkey = "";
+        }
+
+        public void MotionOnTest() {
             if (MotionCombo.SelectedItem != null)
             {
                 if (autocheck.Checked == true)
@@ -1130,16 +1136,16 @@ namespace RoBoME_ver1._0
                 SoundPlayer sp = null;
                 for (int j = 0; j < ((ME_Motion)ME_Motionlist[MotionCombo.SelectedIndex]).Events.Count; j++)
                 {
+                    if (string.Compare(motiontestkey, "ESC") == 0)
+                        break;
                     Motionlist.SelectedIndex = j;
                     if (((ME_Motion)ME_Motionlist[MotionCombo.SelectedIndex]).Events[j] is ME_Frame)
                     {
-
                         for (int i = 0; i < 32; i++)
                             if (String.Compare(Motion.fbox[i].Text, "---noServo---") != 0)
                                 autoframe[i] = (uint)((ME_Frame)((ME_Motion)ME_Motionlist[MotionCombo.SelectedIndex]).Events[j]).frame[i] + offset[i];
                         RoBoIO.rcservo_SetAction(autoframe, (uint)((ME_Frame)((ME_Motion)ME_Motionlist[MotionCombo.SelectedIndex]).Events[j]).delay);
                         while (RoBoIO.rcservo_PlayAction() != RoBoIO.RCSERVO_PLAYEND) ;
-
                     }
                     else if (((ME_Motion)ME_Motionlist[MotionCombo.SelectedIndex]).Events[j] is ME_Delay)
                     {
@@ -1154,21 +1160,30 @@ namespace RoBoME_ver1._0
                     else if (((ME_Motion)ME_Motionlist[MotionCombo.SelectedIndex]).Events[j] is ME_Goto)
                     {
                         if (string.Compare(motiontestkey, ((ME_Goto)((ME_Motion)ME_Motionlist[MotionCombo.SelectedIndex]).Events[j]).key) == 0)
-                        for (int k = 0; k < j; k++){
-                            if(((ME_Motion)ME_Motionlist[MotionCombo.SelectedIndex]).Events[k] is ME_Flag){
-                                if (String.Compare(((ME_Goto)((ME_Motion)ME_Motionlist[MotionCombo.SelectedIndex]).Events[j]).name,
-                                                ((ME_Flag)((ME_Motion)ME_Motionlist[MotionCombo.SelectedIndex]).Events[k]).name) == 0)
-                                    j = k;
-                            }
+                            for (int k = 0; k < j; k++)
+                            {
+                                if (((ME_Motion)ME_Motionlist[MotionCombo.SelectedIndex]).Events[k] is ME_Flag)
+                                {
+                                    if (String.Compare(((ME_Goto)((ME_Motion)ME_Motionlist[MotionCombo.SelectedIndex]).Events[j]).name,
+                                                    ((ME_Flag)((ME_Motion)ME_Motionlist[MotionCombo.SelectedIndex]).Events[k]).name) == 0)
+                                        j = k;
+                                }
 
-                        }
+                            }
                     }
                 }
                 MotionTest.Enabled = true;
-                if(sp != null)
+                if (sp != null)
                     sp.Stop();
                 RoBoIO.rcservo_EnterCaptureMode();
             }
+        }
+        private void MotionTest_Click(object sender, EventArgs e)
+        {
+            Motionlist.Focus();
+            Framelist.Controls.Clear();
+            Thread t = new Thread(MotionOnTest);
+            t.Start();
         }        
         private void set_RBver(){
             if (String.Compare(Motion.comboBox1.Text, "RB_100b1") == 0)

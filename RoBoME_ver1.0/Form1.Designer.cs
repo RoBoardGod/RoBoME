@@ -271,7 +271,6 @@
             this.MotionTest.Text = "Motion Test";
             this.MotionTest.UseVisualStyleBackColor = true;
             this.MotionTest.Click += new System.EventHandler(this.MotionTest_Click);
-            this.MotionTest.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MotionTest_KeyDown);
             // 
             // NewMotion
             // 
@@ -297,6 +296,8 @@
             this.Motionlist.TabIndex = 1;
             this.Motionlist.SelectedIndexChanged += new System.EventHandler(this.Motionlist_SelectedIndexChanged);
             this.Motionlist.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Motionlist_MouseDown);
+            this.Motionlist.KeyUp += new System.Windows.Forms.KeyEventHandler(this.Motionlist_KeyUp);
+            this.Motionlist.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Motionlist_KeyDown);
             // 
             // MotionCombo
             // 
