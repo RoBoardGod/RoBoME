@@ -9,3 +9,14 @@ C:\Users\JiaSiang\Desktop\RoBoME\RoBoME\obj\Release\RoBoME.Properties.Resources.
 C:\Users\JiaSiang\Desktop\RoBoME\RoBoME\obj\Release\RoBoME_ver1._0.SetForm.resources
 C:\Users\JiaSiang\Desktop\RoBoME\RoBoME\obj\Release\RoBoME_ver1._0.TriggerSet.resources
 C:\Users\JiaSiang\Desktop\RoBoME\RoBoME\obj\Release\RoBoME.csproj.GenerateResource.Cache
+C:\Users\JiaSiang\Desktop\RoBoME-github\RoBoME\obj\Release\RoBoME.exe
+C:\Users\JiaSiang\Desktop\RoBoME-github\RoBoME\obj\Release\RoBoME.pdb
+C:\Users\JiaSiang\Desktop\RoBoME-github\RoBoME\bin\Release\RoBoME.exe
+C:\Users\JiaSiang\Desktop\RoBoME-github\RoBoME\bin\Release\RoBoME.pdb
+C:\Users\JiaSiang\Desktop\RoBoME-github\RoBoME\obj\Release\ResolveAssemblyReference.cache
+C:\Users\JiaSiang\Desktop\RoBoME-github\RoBoME\obj\Release\RoBoME_ver1._0.Form1.resources
+C:\Users\JiaSiang\Desktop\RoBoME-github\RoBoME\obj\Release\RoBoME_ver1._0.NewMotion.resources
+C:\Users\JiaSiang\Desktop\RoBoME-github\RoBoME\obj\Release\RoBoME.Properties.Resources.resources
+C:\Users\JiaSiang\Desktop\RoBoME-github\RoBoME\obj\Release\RoBoME_ver1._0.SetForm.resources
+C:\Users\JiaSiang\Desktop\RoBoME-github\RoBoME\obj\Release\RoBoME_ver1._0.TriggerSet.resources
+C:\Users\JiaSiang\Desktop\RoBoME-github\RoBoME\obj\Release\RoBoME.csproj.GenerateResource.Cache
