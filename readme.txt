@@ -18,5 +18,7 @@ tried to make it be used as easily as possible.
 	Release RoBoME.
 2013/1/17 RoBoME version 1.02
 	Increase sound function.
-2013/1/24 RoBoME version 1.02
+2013/1/24 RoBoME version 1.03
 	Increase offset and goto function.
+2013/1/29 RoBoME version 1.04
+	Increase homeframe function.

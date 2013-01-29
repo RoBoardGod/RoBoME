@@ -34,11 +34,12 @@
             this.label1 = new System.Windows.Forms.Label();
             this.channelver = new System.Windows.Forms.Panel();
             this.label2 = new System.Windows.Forms.Label();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(116, 227);
+            this.button1.Location = new System.Drawing.Point(165, 227);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 1;
@@ -48,7 +49,7 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(197, 227);
+            this.button2.Location = new System.Drawing.Point(267, 227);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 23);
             this.button2.TabIndex = 2;
@@ -61,7 +62,7 @@
             this.comboBox1.FormattingEnabled = true;
             this.comboBox1.Location = new System.Drawing.Point(111, 8);
             this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(261, 20);
+            this.comboBox1.Size = new System.Drawing.Size(360, 20);
             this.comboBox1.TabIndex = 3;
             this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
             // 
@@ -78,8 +79,10 @@
             // 
             this.channelver.AutoScroll = true;
             this.channelver.Location = new System.Drawing.Point(12, 47);
+            this.channelver.MaximumSize = new System.Drawing.Size(460, 174);
+            this.channelver.MinimumSize = new System.Drawing.Size(360, 174);
             this.channelver.Name = "channelver";
-            this.channelver.Size = new System.Drawing.Size(360, 174);
+            this.channelver.Size = new System.Drawing.Size(459, 174);
             this.channelver.TabIndex = 5;
             // 
             // label2
@@ -91,11 +94,23 @@
             this.label2.TabIndex = 6;
             this.label2.Text = "offset";
             // 
+            // checkBox1
+            // 
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Location = new System.Drawing.Point(395, 31);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(77, 16);
+            this.checkBox1.TabIndex = 8;
+            this.checkBox1.Text = "homeframe";
+            this.checkBox1.UseVisualStyleBackColor = true;
+            this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
+            // 
             // NewMotion
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(384, 262);
+            this.ClientSize = new System.Drawing.Size(484, 262);
+            this.Controls.Add(this.checkBox1);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.channelver);
             this.Controls.Add(this.label1);
@@ -103,8 +118,8 @@
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
             this.MaximizeBox = false;
-            this.MaximumSize = new System.Drawing.Size(400, 300);
-            this.MinimumSize = new System.Drawing.Size(400, 300);
+            this.MaximumSize = new System.Drawing.Size(500, 300);
+            this.MinimumSize = new System.Drawing.Size(500, 300);
             this.Name = "NewMotion";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
@@ -123,6 +138,7 @@
         private System.Windows.Forms.Panel channelver;
         public System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.Label label2;
+        public System.Windows.Forms.CheckBox checkBox1;
 
     }
 }

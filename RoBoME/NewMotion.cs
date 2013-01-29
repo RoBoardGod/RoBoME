@@ -16,7 +16,9 @@ namespace RoBoME_ver1._0
         public Label[] flabel = new Label[32];
         public ComboBox[] fbox = new ComboBox[32];
         public MaskedTextBox[] ftext = new MaskedTextBox[32];
+        public MaskedTextBox[] ftext2 = new MaskedTextBox[32];
         uint[] offset = new uint[32];
+        uint[] homeframe = new uint[32];
         char[] delimiterChars = { ' ', '\t', '\r', '\n' };
         public NewMotion()
         {
@@ -46,13 +48,29 @@ namespace RoBoME_ver1._0
                 {
                     offset[i] = 0;
                 }
+            if (File.Exists("homeframe.txt"))
+                using (StreamReader reader = new StreamReader(Environment.CurrentDirectory + "\\homeframe.txt"))
+                {
+                    string[] datas = reader.ReadToEnd().Split(delimiterChars);
+                    for (int i = 0; i < 32; i++)
+                    {
+                        homeframe[i] = uint.Parse(datas[i]);
+                    }
+
+                }
+            else
+                for (int i = 0; i < 32; i++)
+                {
+                    homeframe[i] = 0;
+                }
             for (int i = 0; i < 32; i++)
             {
                 fpanel[i] = new Panel();
                 flabel[i] = new Label();
                 fbox[i] = new ComboBox();
                 ftext[i] = new MaskedTextBox();
-                fpanel[i].Size = new Size(350, 30);
+                ftext2[i] = new MaskedTextBox();
+                fpanel[i].Size = new Size(400, 30);
                 fpanel[i].Top += i * 30;
                 flabel[i].Size = new Size(65, 18);
                 flabel[i].Top += 5;
@@ -64,22 +82,28 @@ namespace RoBoME_ver1._0
                 ftext[i].KeyPress += new KeyPressEventHandler(numbercheck);
                 ftext[i].Size = new Size(50, 22);
                 ftext[i].Left += 280;
+                ftext2[i].Text = homeframe[i].ToString();
+                ftext2[i].TextAlign = HorizontalAlignment.Right;
+                ftext2[i].KeyPress += new KeyPressEventHandler(numbercheck);
+                ftext2[i].Size = new Size(50, 22);
+                ftext2[i].Left += 350;
+                ftext2[i].Enabled = false;
                 fbox[i].Items.AddRange(new object[] { "---noServo---",
-                                                      "RCSERVO_KONDO_KRS786",       
-                                                      "RCSERVO_KONDO_KRS788",       
-                                                      "RCSERVO_KONDO_KRS78X",       
-                                                      "RCSERVO_KONDO_KRS4014",      
-                                                      "RCSERVO_KONDO_KRS4024",      
-                                                      "RCSERVO_HITEC_HSR8498",      
-                                                      "RCSERVO_FUTABA_S3003",       
-                                                      "RCSERVO_SHAYYE_SYS214050",   
-                                                      "RCSERVO_TOWERPRO_MG995",     
-                                                      "RCSERVO_TOWERPRO_MG996",     
-                                                      "RCSERVO_DMP_RS0263",         
-                                                      "RCSERVO_DMP_RS1270",         
-                                                      "RCSERVO_GWS_S777",           
-                                                      "RCSERVO_GWS_S03T",           
-                                                      "RCSERVO_GWS_MICRO"});
+                                                      "KONDO_KRS786",       
+                                                      "KONDO_KRS788",       
+                                                      "KONDO_KRS78X",       
+                                                      "KONDO_KRS4014",      
+                                                      "KONDO_KRS4024",      
+                                                      "HITEC_HSR8498",      
+                                                      "FUTABA_S3003",       
+                                                      "SHAYYE_SYS214050",   
+                                                      "TOWERPRO_MG995",     
+                                                      "TOWERPRO_MG996",     
+                                                      "DMP_RS0263",         
+                                                      "DMP_RS1270",         
+                                                      "GWS_S777",           
+                                                      "GWS_S03T",           
+                                                      "GWS_MICRO"});
                 fbox[i].SelectedIndex = 0;
                 if (i < 10)
                     flabel[i].Text = "SetServo " + i.ToString() + ":";
@@ -89,6 +113,7 @@ namespace RoBoME_ver1._0
                 fpanel[i].Controls.Add(flabel[i]);
                 fpanel[i].Controls.Add(fbox[i]);
                 fpanel[i].Controls.Add(ftext[i]);
+                fpanel[i].Controls.Add(ftext2[i]);
                 channelver.Controls.Add(fpanel[i]);
             }
         }
@@ -113,7 +138,29 @@ namespace RoBoME_ver1._0
                     {
                         for (int j = 0; j < 32; j++)
                         {
+                            if (string.Compare(ftext[j].Text, "") == 0)
+                            {
+                                ftext[j].Text = "0";
+                            }
                             writer.Write(ftext[j].Text + " ");
+                        }
+                    }
+                    break;
+                }
+            }
+            for (int i = 0; i < 32; i++)
+            {
+                if (uint.Parse(ftext2[i].Text) != homeframe[i])
+                {
+                    using (TextWriter writer = new StreamWriter(Environment.CurrentDirectory + "\\homeframe.txt"))
+                    {
+                        for (int j = 0; j < 32; j++)
+                        {
+                            if (string.Compare(ftext[j].Text, "") == 0)
+                            {
+                                ftext[j].Text = "1500";
+                            }
+                            writer.Write(ftext2[j].Text + " ");
                         }
                     }
                     break;
@@ -146,6 +193,25 @@ namespace RoBoME_ver1._0
                     fbox[i].SelectedIndex = 0;
                 }
             
+            }
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBox1.Checked == true)
+            {
+                for (int i = 0; i < 32; i++)
+                {
+                    ftext2[i].Enabled = true;
+                }
+
+            }
+            else {
+                for (int i = 0; i < 32; i++)
+                {
+                    ftext2[i].Enabled = false;
+                }
+
             }
         }
 

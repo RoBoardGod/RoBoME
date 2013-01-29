@@ -36,6 +36,7 @@ namespace RoBoME_ver1._0
         int framecount = 0;
         Boolean new_obj = false;
         String nfilename = "";
+        uint[] homeframe = new uint[32];
         uint[] autoframe = new uint[32];
         uint[] offset = new uint[32];
         public Boolean onPC = true;
@@ -174,6 +175,21 @@ namespace RoBoME_ver1._0
                 {
                     offset[i] = 0;
                 }
+            if (File.Exists("homeframe.txt"))
+                using (StreamReader reader = new StreamReader(Environment.CurrentDirectory + "\\homeframe.txt"))
+                {
+                    string[] datas = reader.ReadToEnd().Split(delimiterChars);
+                    for (int i = 0; i < 32; i++)
+                    {
+                        homeframe[i] = uint.Parse(datas[i]);
+                    }
+
+                }
+            else
+                for (int i = 0; i < 32; i++)
+                {
+                    homeframe[i] = 0;
+                }
             if (Motion != null)
             { 
                 if (!onPC)
@@ -204,6 +220,7 @@ namespace RoBoME_ver1._0
                 typecombo.Text = "";
                 for (int i = 0; i < 32; i++) {
                     offset[i] = uint.Parse(nMotion.ftext[i].Text);
+                    homeframe[i] = uint.Parse(nMotion.ftext2[i].Text);
                 }
                 if (!onPC)
                 {
@@ -233,6 +250,21 @@ namespace RoBoME_ver1._0
                     {
                         offset[i] = 0;
                     }
+                if (File.Exists("homeframe.txt"))
+                    using (StreamReader reader = new StreamReader(Environment.CurrentDirectory + "\\homeframe.txt"))
+                    {
+                        string[] datas = reader.ReadToEnd().Split(delimiterChars);
+                        for (int i = 0; i < 32; i++)
+                        {
+                            homeframe[i] = uint.Parse(datas[i]);
+                        }
+
+                    }
+                else
+                    for (int i = 0; i < 32; i++)
+                    {
+                        homeframe[i] = 0;
+                    }
                 if (!onPC)
                 {
                     RoBoIO.rcservo_Close();
@@ -256,7 +288,13 @@ namespace RoBoME_ver1._0
                 writer.Write("RoBoardVer ");
                 writer.Write(Motion.comboBox1.SelectedItem.ToString());
                 writer.Write("\n");
+                writer.Write("Homeframe ");
+                if(Motion.checkBox1.Checked == true)
+                    writer.Write("Yes");
+                else
+                    writer.Write("No");
 
+                writer.Write("\n");
                 writer.Write("Servo ");
                 for (int i = 0; i < 32; i++)
                 {
@@ -349,6 +387,21 @@ namespace RoBoME_ver1._0
                 {
                     offset[i] = 0;
                 }
+            if (File.Exists("homeframe.txt"))
+                using (StreamReader reader = new StreamReader(Environment.CurrentDirectory + "\\homeframe.txt"))
+                {
+                    string[] datas = reader.ReadToEnd().Split(delimiterChars);
+                    for (int i = 0; i < 32; i++)
+                    {
+                        homeframe[i] = uint.Parse(datas[i]);
+                    }
+
+                }
+            else
+                for (int i = 0; i < 32; i++)
+                {
+                    homeframe[i] = 0;
+                }
             if (Motion != null)
             {
                 if (!onPC)
@@ -371,21 +424,21 @@ namespace RoBoME_ver1._0
                                             "RB_110",
                                             "unknow"};
             string[] servo = new string[] { "---noServo---",
-                                            "RCSERVO_KONDO_KRS786",       
-                                            "RCSERVO_KONDO_KRS788",       
-                                            "RCSERVO_KONDO_KRS78X",       
-                                            "RCSERVO_KONDO_KRS4014",      
-                                            "RCSERVO_KONDO_KRS4024",      
-                                            "RCSERVO_HITEC_HSR8498",      
-                                            "RCSERVO_FUTABA_S3003",       
-                                            "RCSERVO_SHAYYE_SYS214050",   
-                                            "RCSERVO_TOWERPRO_MG995",     
-                                            "RCSERVO_TOWERPRO_MG996",     
-                                            "RCSERVO_DMP_RS0263",         
-                                            "RCSERVO_DMP_RS1270",         
-                                            "RCSERVO_GWS_S777",           
-                                            "RCSERVO_GWS_S03T",           
-                                            "RCSERVO_GWS_MICRO"};
+                                            "KONDO_KRS786",       
+                                            "KONDO_KRS788",       
+                                            "KONDO_KRS78X",       
+                                            "KONDO_KRS4014",      
+                                            "KONDO_KRS4024",      
+                                            "HITEC_HSR8498",      
+                                            "FUTABA_S3003",       
+                                            "SHAYYE_SYS214050",   
+                                            "TOWERPRO_MG995",     
+                                            "TOWERPRO_MG996",     
+                                            "DMP_RS0263",         
+                                            "DMP_RS1270",         
+                                            "GWS_S777",           
+                                            "GWS_S03T",           
+                                            "GWS_MICRO"};
             ME_Motion motiontag = null;
 
             OpenFileDialog dialog = new OpenFileDialog();
@@ -418,8 +471,17 @@ namespace RoBoME_ver1._0
                                 nMotion.comboBox1.SelectedIndex = j;
                             }
                     }
+                    else if (String.Compare(datas[i], "Homeframe") == 0)
+                    {
+                        i++;
+                        if (String.Compare(datas[i], "Yes") == 0)
+                            nMotion.checkBox1.Checked = true;
+                        else
+                            nMotion.checkBox1.Checked = false;
+                    }
                     else if (String.Compare(datas[i], "Servo") == 0)
                     {
+
                         for (int k = 0; k < 32; k++)
                         {
                             i++;
@@ -482,7 +544,8 @@ namespace RoBoME_ver1._0
                                 i++;
                                 nframe.frame[j] = int.Parse(datas[i]);
                             }
-                            else {
+                            else
+                            {
                                 nframe.frame[j] = 0;
                             }
                             j++;
@@ -566,7 +629,12 @@ namespace RoBoME_ver1._0
                 if (new_obj) {
                     Motionlist.Items.Insert(Motionlist.SelectedIndex+1,"[Frame] " + MotionCombo.SelectedItem.ToString() + "-" + framecount++.ToString());
                     ((ME_Motion)ME_Motionlist[MotionCombo.SelectedIndex]).Events.Insert(Motionlist.SelectedIndex + 1, new ME_Frame());
+
                     Motionlist.SelectedIndex++;
+
+                    for (int i = 0; i < 32; i++)
+                        if (String.Compare(Motion.fbox[i].Text, "---noServo---") != 0)
+                            ((ME_Frame)((ME_Motion)ME_Motionlist[MotionCombo.SelectedIndex]).Events[Motionlist.SelectedIndex]).frame[i] = (int)homeframe[i];
                 }
                 delaytext.Enabled = true;
                 label2.Enabled = true;
@@ -1045,35 +1113,35 @@ namespace RoBoME_ver1._0
                 {
                     usepin += (uint)Math.Pow(2, i);
                 }
-                if (String.Compare(Motion.fbox[i].Text, "RCSERVO_KONDO_KRS786") == 0)
+                if (String.Compare(Motion.fbox[i].Text, "KONDO_KRS786") == 0)
                     RoBoIO.rcservo_SetServo(i, RoBoIO.RCSERVO_KONDO_KRS786);
-                else if (String.Compare(Motion.fbox[i].Text, "RCSERVO_KONDO_KRS788") == 0)
+                else if (String.Compare(Motion.fbox[i].Text, "KONDO_KRS788") == 0)
                     RoBoIO.rcservo_SetServo(i, RoBoIO.RCSERVO_KONDO_KRS788);
-                else if (String.Compare(Motion.fbox[i].Text, "RCSERVO_KONDO_KRS78X") == 0)
+                else if (String.Compare(Motion.fbox[i].Text, "KONDO_KRS78X") == 0)
                     RoBoIO.rcservo_SetServo(i, RoBoIO.RCSERVO_KONDO_KRS78X);
-                else if (String.Compare(Motion.fbox[i].Text, "RCSERVO_KONDO_KRS4014") == 0)
+                else if (String.Compare(Motion.fbox[i].Text, "KONDO_KRS4014") == 0)
                     RoBoIO.rcservo_SetServo(i, RoBoIO.RCSERVO_KONDO_KRS4014);
-                else if (String.Compare(Motion.fbox[i].Text, "RCSERVO_KONDO_KRS4024") == 0)
+                else if (String.Compare(Motion.fbox[i].Text, "KONDO_KRS4024") == 0)
                     RoBoIO.rcservo_SetServo(i, RoBoIO.RCSERVO_KONDO_KRS4024);
-                else if (String.Compare(Motion.fbox[i].Text, "RCSERVO_HITEC_HSR8498") == 0)
+                else if (String.Compare(Motion.fbox[i].Text, "HITEC_HSR8498") == 0)
                     RoBoIO.rcservo_SetServo(i, RoBoIO.RCSERVO_HITEC_HSR8498);
-                else if (String.Compare(Motion.fbox[i].Text, "RCSERVO_FUTABA_S3003") == 0)
+                else if (String.Compare(Motion.fbox[i].Text, "FUTABA_S3003") == 0)
                     RoBoIO.rcservo_SetServo(i, RoBoIO.RCSERVO_FUTABA_S3003);
-                else if (String.Compare(Motion.fbox[i].Text, "RCSERVO_SHAYYE_SYS214050") == 0)
+                else if (String.Compare(Motion.fbox[i].Text, "SHAYYE_SYS214050") == 0)
                     RoBoIO.rcservo_SetServo(i, RoBoIO.RCSERVO_SHAYYE_SYS214050);
-                else if (String.Compare(Motion.fbox[i].Text, "RCSERVO_TOWERPRO_MG995") == 0)
+                else if (String.Compare(Motion.fbox[i].Text, "TOWERPRO_MG995") == 0)
                     RoBoIO.rcservo_SetServo(i, RoBoIO.RCSERVO_TOWERPRO_MG995);
-                else if (String.Compare(Motion.fbox[i].Text, "RCSERVO_TOWERPRO_MG996") == 0)
+                else if (String.Compare(Motion.fbox[i].Text, "TOWERPRO_MG996") == 0)
                     RoBoIO.rcservo_SetServo(i, RoBoIO.RCSERVO_TOWERPRO_MG996);
-                else if (String.Compare(Motion.fbox[i].Text, "RCSERVO_DMP_RS0263") == 0)
+                else if (String.Compare(Motion.fbox[i].Text, "DMP_RS0263") == 0)
                     RoBoIO.rcservo_SetServo(i, RoBoIO.RCSERVO_DMP_RS0263);
-                else if (String.Compare(Motion.fbox[i].Text, "RCSERVO_DMP_RS1270") == 0)
+                else if (String.Compare(Motion.fbox[i].Text, "DMP_RS1270") == 0)
                     RoBoIO.rcservo_SetServo(i, RoBoIO.RCSERVO_DMP_RS1270);
-                else if (String.Compare(Motion.fbox[i].Text, "RCSERVO_GWS_S777") == 0)
+                else if (String.Compare(Motion.fbox[i].Text, "GWS_S777") == 0)
                     RoBoIO.rcservo_SetServo(i, RoBoIO.RCSERVO_GWS_S777);
-                else if (String.Compare(Motion.fbox[i].Text, "RCSERVO_GWS_S03T") == 0)
+                else if (String.Compare(Motion.fbox[i].Text, "GWS_S03T") == 0)
                     RoBoIO.rcservo_SetServo(i, RoBoIO.RCSERVO_GWS_S03T);
-                else if (String.Compare(Motion.fbox[i].Text, "RCSERVO_GWS_MICRO") == 0)
+                else if (String.Compare(Motion.fbox[i].Text, "GWS_MICRO") == 0)
                     RoBoIO.rcservo_SetServo(i, RoBoIO.RCSERVO_GWS_MICRO);
             }
             if(!RoBoIO.rcservo_Init(usepin))
@@ -1131,7 +1199,11 @@ namespace RoBoME_ver1._0
                     RoBoIO.rcservo_EnterCaptureMode();
                     autocheck.Checked = false;
                 }
-                RoBoIO.rcservo_EnterPlayMode();
+
+                if (Motion.checkBox1.Checked == true)
+                    RoBoIO.rcservo_EnterPlayMode_HOME(homeframe);
+                else
+                    RoBoIO.rcservo_EnterPlayMode();
                 MotionTest.Enabled = false;
                 SoundPlayer sp = null;
                 for (int j = 0; j < ((ME_Motion)ME_Motionlist[MotionCombo.SelectedIndex]).Events.Count; j++)
@@ -1226,8 +1298,10 @@ namespace RoBoME_ver1._0
             }
             else if (autocheck.Checked == true)
             {
-
-                RoBoIO.rcservo_EnterPlayMode();
+                if (Motion.checkBox1.Checked == true)
+                    RoBoIO.rcservo_EnterPlayMode_HOME(homeframe);
+                else
+                    RoBoIO.rcservo_EnterPlayMode();
                 for (int i = 0; i < 32; i++)
                     if (String.Compare(Motion.fbox[i].Text, "---noServo---") != 0)
                         autoframe[i] = uint.Parse(ftext[i].Text) + offset[i];
