@@ -17,8 +17,12 @@ namespace RoBoME_ver1._0
         public ComboBox[] fbox = new ComboBox[32];
         public MaskedTextBox[] ftext = new MaskedTextBox[32];
         public MaskedTextBox[] ftext2 = new MaskedTextBox[32];
+        public MaskedTextBox[] ftext3 = new MaskedTextBox[32];
+        public MaskedTextBox[] ftext4 = new MaskedTextBox[32];
         uint[] offset = new uint[32];
         uint[] homeframe = new uint[32];
+        uint[] Max = new uint[32];
+        uint[] min = new uint[32];
         char[] delimiterChars = { ' ', '\t', '\r', '\n' };
         public NewMotion()
         {
@@ -61,7 +65,22 @@ namespace RoBoME_ver1._0
             else
                 for (int i = 0; i < 32; i++)
                 {
-                    homeframe[i] = 0;
+                    homeframe[i] = 1500;
+                }
+            if (File.Exists("Range.txt"))
+                using (StreamReader reader = new StreamReader(Environment.CurrentDirectory + "\\Range.txt"))
+                {
+                    string[] datas = reader.ReadToEnd().Split(delimiterChars);
+                    for (int i = 0; i < 32; i++){
+                        min[i] = uint.Parse(datas[i]);
+                        Max[i] = uint.Parse(datas[i+32]);
+                    }
+                }
+            else
+                for (int i = 0; i < 32; i++)
+                {
+                    min[i] = 600;
+                    Max[i] = 2300;
                 }
             for (int i = 0; i < 32; i++)
             {
@@ -70,7 +89,9 @@ namespace RoBoME_ver1._0
                 fbox[i] = new ComboBox();
                 ftext[i] = new MaskedTextBox();
                 ftext2[i] = new MaskedTextBox();
-                fpanel[i].Size = new Size(400, 30);
+                ftext3[i] = new MaskedTextBox();
+                ftext4[i] = new MaskedTextBox();
+                fpanel[i].Size = new Size(520, 30);
                 fpanel[i].Top += i * 30;
                 flabel[i].Size = new Size(65, 18);
                 flabel[i].Top += 5;
@@ -81,13 +102,27 @@ namespace RoBoME_ver1._0
                 ftext[i].TextAlign = HorizontalAlignment.Right;
                 ftext[i].KeyPress += new KeyPressEventHandler(numbercheck);
                 ftext[i].Size = new Size(50, 22);
-                ftext[i].Left += 280;
+                ftext[i].Left += 270;
                 ftext2[i].Text = homeframe[i].ToString();
                 ftext2[i].TextAlign = HorizontalAlignment.Right;
                 ftext2[i].KeyPress += new KeyPressEventHandler(numbercheck);
                 ftext2[i].Size = new Size(50, 22);
                 ftext2[i].Left += 350;
                 ftext2[i].Enabled = false;
+
+                ftext3[i].Text = min[i].ToString();
+                ftext3[i].TextAlign = HorizontalAlignment.Right;
+                ftext3[i].KeyPress += new KeyPressEventHandler(numbercheck);
+                ftext3[i].Size = new Size(40, 22);
+                ftext3[i].Left += 410;
+                ftext3[i].Enabled = false;
+
+                ftext4[i].Text = Max[i].ToString();
+                ftext4[i].TextAlign = HorizontalAlignment.Right;
+                ftext4[i].KeyPress += new KeyPressEventHandler(numbercheck);
+                ftext4[i].Size = new Size(40, 22);
+                ftext4[i].Left += 460;
+                ftext4[i].Enabled = false;
                 fbox[i].Items.AddRange(new object[] { "---noServo---",
                                                       "KONDO_KRS786",       
                                                       "KONDO_KRS788",       
@@ -114,6 +149,8 @@ namespace RoBoME_ver1._0
                 fpanel[i].Controls.Add(fbox[i]);
                 fpanel[i].Controls.Add(ftext[i]);
                 fpanel[i].Controls.Add(ftext2[i]);
+                fpanel[i].Controls.Add(ftext3[i]);
+                fpanel[i].Controls.Add(ftext4[i]);
                 channelver.Controls.Add(fpanel[i]);
             }
         }
@@ -158,9 +195,35 @@ namespace RoBoME_ver1._0
                         {
                             if (string.Compare(ftext[j].Text, "") == 0)
                             {
-                                ftext[j].Text = "1500";
+                                ftext2[j].Text = "1500";
                             }
                             writer.Write(ftext2[j].Text + " ");
+                        }
+                    }
+                    break;
+                }
+            }
+            for (int i = 0; i < 32; i++)
+            {
+                if (uint.Parse(ftext3[i].Text) != min[i] || uint.Parse(ftext4[i].Text) != Max[i])
+                {
+                    using (TextWriter writer = new StreamWriter(Environment.CurrentDirectory + "\\Range.txt"))
+                    {
+                        for (int j = 0; j < 32; j++)
+                        {
+                            if (string.Compare(ftext3[j].Text, "") == 0)
+                            {
+                                ftext3[j].Text = "600";
+                            }
+                            writer.Write(ftext3[j].Text + " ");
+                        }
+                        for (int j = 0; j < 32; j++)
+                        {
+                            if (string.Compare(ftext4[j].Text, "") == 0)
+                            {
+                                ftext4[j].Text = "2400";
+                            }
+                            writer.Write(ftext4[j].Text + " ");
                         }
                     }
                     break;
@@ -213,6 +276,29 @@ namespace RoBoME_ver1._0
                 }
 
             }
+        }
+
+        private void checkBox2_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBox2.Checked == true)
+            {
+                for (int i = 0; i < 32; i++)
+                {
+                    ftext3[i].Enabled = true;
+                    ftext4[i].Enabled = true;
+                }
+
+            }
+            else
+            {
+                for (int i = 0; i < 32; i++)
+                {
+                    ftext3[i].Enabled = false;
+                    ftext4[i].Enabled = false;
+                }
+
+            }
+
         }
 
     }

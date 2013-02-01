@@ -22,3 +22,5 @@ tried to make it be used as easily as possible.
 	Increase offset and goto function.
 2013/1/29 RoBoME version 1.04
 	Increase homeframe function.
+2013/1/30 RoBoME version 1.05
+	Increase framerange function, and fix a little bug.
