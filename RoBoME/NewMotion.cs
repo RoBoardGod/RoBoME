@@ -24,6 +24,10 @@ namespace RoBoME_ver1._0
         uint[] Max = new uint[32];
         uint[] min = new uint[32];
         char[] delimiterChars = { ' ', '\t', '\r', '\n' };
+        public string picfilename = null;
+        public int[] channelx = new int[32];
+        public int[] channely = new int[32];
+        public bool newflag = false;
         public NewMotion()
         {
             InitializeComponent();
@@ -81,6 +85,24 @@ namespace RoBoME_ver1._0
                 {
                     min[i] = 600;
                     Max[i] = 2300;
+                }
+            if (File.Exists("picmode.txt"))
+                using (StreamReader reader = new StreamReader(Environment.CurrentDirectory + "\\picmode.txt"))
+                {
+                    string[] datas = reader.ReadToEnd().Split(delimiterChars);
+                    picfilename = datas[0];
+                    for (int i = 0; i < 32; i++)
+                    {
+                        channelx[i] = int.Parse(datas[1 + i]);
+                        channely[i] = int.Parse(datas[33 + i]);
+                    }
+                }
+            else
+                for (int i = 0; i < 32; i++)
+                {
+                    picfilename = null;
+                    channelx[i] = 0;
+                    channely[i] = 0;
                 }
             for (int i = 0; i < 32; i++)
             {
@@ -229,6 +251,18 @@ namespace RoBoME_ver1._0
                     break;
                 }
             }
+            
+            if (picfilename != null)
+            {
+                using (TextWriter writer = new StreamWriter(Environment.CurrentDirectory + "\\picmode.txt"))
+                {
+                    writer.Write(picfilename + " ");
+                    for(int i = 0; i < 32; i++)
+                        writer.Write(channelx[i] + " ");
+                    for (int i = 0; i < 32; i++)
+                        writer.Write(channely[i] + " ");
+                }
+            }
             if (String.Compare(comboBox1.SelectedItem.ToString(), "---unset---") == 0)
                 MessageBox.Show("Error:\nYou have not choice your RoBoard version.");
             else
@@ -297,6 +331,27 @@ namespace RoBoME_ver1._0
                     ftext4[i].Enabled = false;
                 }
 
+            }
+
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog ofdPic = new OpenFileDialog();
+            ofdPic.Filter = "JPG(*.JPG;*.JPEG);gif文件(*.GIF)|*.jpg;*.jpeg;*.gif";
+            ofdPic.FilterIndex = 1;
+            ofdPic.RestoreDirectory = true;
+            ofdPic.FileName = "";
+            if (ofdPic.ShowDialog() == DialogResult.OK)
+            {
+
+                picfilename = Path.GetFileName(ofdPic.FileName);
+                newflag = true;
+            }
+            else
+            {
+                picfilename = null;
+            
             }
 
         }

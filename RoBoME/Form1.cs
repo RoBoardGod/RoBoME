@@ -42,6 +42,7 @@ namespace RoBoME_ver1._0
         uint[] autoframe = new uint[32];
         uint[] offset = new uint[32];
         public Boolean onPC = true;
+        int mdx, mdy;
         string motiontestkey = "";
         string[] motionevent = {"New object",
                                "Delete object",
@@ -57,13 +58,11 @@ namespace RoBoME_ver1._0
             groupBox3.Enabled = false;
             saveFileToolStripMenuItem.Enabled = false;
             optionToolStripMenuItem.Enabled = false;
-            
-
         }
         private void Update_framelist()         //set framelist
         {
             Framelist.Controls.Clear();
-            
+            int count = 0;
             for (int i = 0; i < 32; i++)
             {
                 if (String.Compare(Motion.fbox[i].Text, "---noServo---") != 0)
@@ -73,15 +72,32 @@ namespace RoBoME_ver1._0
                     ftext[i] = new MaskedTextBox();
                     fbar[i] = new HScrollBar();
                     fpanel[i].Size = new Size(260, 30);
-                    fpanel[i].Top += i * 30;
+                    fpanel[i].BackColor = Color.Transparent;
+                    if (Motion.picfilename == null || Motion.newflag == true)
+                        fpanel[i].Top = count * 30;
+                    else
+                    {
+                        fpanel[i].Top = Motion.channely[i];
+                        fpanel[i].Left = Motion.channelx[i];
+                    }
                     flabel[i].Size = new Size(40, 18);
-                    flabel[i].Top += 5;
+                    flabel[i].BackColor = Color.White;
+                    flabel[i].Top += 3;
                     flabel[i].Left += 5;
                     ftext[i].Size = new Size(45, 22);
                     ftext[i].Left += 45;
                     ftext[i].TextAlign = HorizontalAlignment.Right;
-                    
+
+                    flabel[i].Name = i.ToString();
                     ftext[i].Name = i.ToString();
+
+                    if (Motion.picfilename != null)
+                    {
+                        Motion.newflag = false;
+                        flabel[i].MouseDown += new MouseEventHandler(flMouseDown);
+                        flabel[i].MouseUp += new MouseEventHandler(flMouseUp);
+                        flabel[i].MouseMove += new MouseEventHandler(flMouseMove);
+                    }
                     ftext[i].TextChanged += new EventHandler(Text_Changed);
                     ftext[i].KeyPress += new KeyPressEventHandler(numbercheck);
                     fbar[i].Size = new Size(160, 22);
@@ -131,49 +147,78 @@ namespace RoBoME_ver1._0
                     fpanel[i].Controls.Add(ftext[i]);
                     fpanel[i].Controls.Add(fbar[i]);
                     Framelist.Controls.Add(fpanel[i]);
+                    count++;
                 }
             }
-
         }
-        public void scroll_event(object sender, EventArgs e){   //Scroll event
-                this.ftext[int.Parse(((HScrollBar)sender).Name)].Text = ((HScrollBar)sender).Value.ToString();
-
-            
+        public void flMouseDown(object sender, MouseEventArgs e)
+        {
+                mdx = e.X;
+                mdy = e.Y;           
+        }
+        public void flMouseUp(object sender, MouseEventArgs e)
+        {
+            using (TextWriter writer = new StreamWriter(Environment.CurrentDirectory + "\\picmode.txt"))
+            {
+                writer.Write(Motion.picfilename + " ");
+                for (int i = 0; i < 32; i++)
+                    writer.Write(Motion.channelx[i] + " ");
+                for (int i = 0; i < 32; i++)
+                    writer.Write(Motion.channely[i] + " ");
+            }
+        }
+        public void flMouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                if (e.Y - mdy + 30 < 550)
+                    fpanel[int.Parse(((Label)sender).Name)].Top += e.Y - mdy;
+                if (e.X - mdx + 260 < 700)
+                    fpanel[int.Parse(((Label)sender).Name)].Left += e.X-mdx;
+                Motion.channely[int.Parse(((Label)sender).Name)] = fpanel[int.Parse(((Label)sender).Name)].Top;
+                Motion.channelx[int.Parse(((Label)sender).Name)] = fpanel[int.Parse(((Label)sender).Name)].Left;
+            }
+        }
+        public void scroll_event(object sender, ScrollEventArgs e){   //Scroll event
+             //if (e.Type == ScrollEventType.EndScroll)
+                this.ftext[int.Parse(((HScrollBar)sender).Name)].Text = ((HScrollBar)sender).Value.ToString();            
         }
         public void Text_Changed(object sender, EventArgs e){   //Text event
             int n;
+            if (Motion.checkBox2.Checked == true)
+            {
+                if (int.Parse(((MaskedTextBox)sender).Text) <= Max[int.Parse(((MaskedTextBox)sender).Name)] && int.Parse(((MaskedTextBox)sender).Text) >= min[int.Parse(((MaskedTextBox)sender).Name)])
+                {
+                    this.fbar[int.Parse(((MaskedTextBox)sender).Name)].Value = int.Parse(((MaskedTextBox)sender).Text);
+                    if (autocheck.Checked == true)
+                    {
+                        for (int i = 0; i < 32; i++)
+                            if (String.Compare(Motion.fbox[i].Text, "---noServo---") != 0)
+                                autoframe[i] = uint.Parse(ftext[i].Text);
+                        RoBoIO.rcservo_SetAction(autoframe, 0);
+                        RoBoIO.rcservo_PlayAction();
+                    }
+                }
+            }
+            else
+            {
+                if (int.Parse(((MaskedTextBox)sender).Text) <= 2400 && int.Parse(((MaskedTextBox)sender).Text) >= 900)
+                {
+                    this.fbar[int.Parse(((MaskedTextBox)sender).Name)].Value = int.Parse(((MaskedTextBox)sender).Text);
+                    if (autocheck.Checked == true)
+                    {
+                        for (int i = 0; i < 32; i++)
+                            if (String.Compare(Motion.fbox[i].Text, "---noServo---") != 0)
+                                autoframe[i] = uint.Parse(ftext[i].Text);
+                        RoBoIO.rcservo_SetAction(autoframe, 0);
+                        RoBoIO.rcservo_PlayAction();
+                    }
+                }
+            }
             if (int.TryParse(((MaskedTextBox)sender).Text,out n))
             {
 
-                if (Motion.checkBox2.Checked == true)
-                {
-                    if (int.Parse(((MaskedTextBox)sender).Text) <= Max[int.Parse(((MaskedTextBox)sender).Name)] && int.Parse(((MaskedTextBox)sender).Text) >= min[int.Parse(((MaskedTextBox)sender).Name)])
-                    {
-                        this.fbar[int.Parse(((MaskedTextBox)sender).Name)].Value = int.Parse(((MaskedTextBox)sender).Text);
-                        if (autocheck.Checked == true)
-                        {
-                            for (int i = 0; i < 32; i++)
-                                if (String.Compare(Motion.fbox[i].Text, "---noServo---") != 0)
-                                    autoframe[i] = uint.Parse(ftext[i].Text);
-                            RoBoIO.rcservo_SetAction(autoframe, uint.Parse(delaytext.Text));
-                            RoBoIO.rcservo_PlayAction();
-                        }
-                    }
-                }
-                else {
-                    if (int.Parse(((MaskedTextBox)sender).Text) <= 2400 && int.Parse(((MaskedTextBox)sender).Text) >= 900)
-                    {
-                        this.fbar[int.Parse(((MaskedTextBox)sender).Name)].Value = int.Parse(((MaskedTextBox)sender).Text);
-                        if (autocheck.Checked == true)
-                        {
-                            for (int i = 0; i < 32; i++)
-                                if (String.Compare(Motion.fbox[i].Text, "---noServo---") != 0)
-                                    autoframe[i] = uint.Parse(ftext[i].Text);
-                            RoBoIO.rcservo_SetAction(autoframe, uint.Parse(delaytext.Text));
-                            RoBoIO.rcservo_PlayAction();
-                        }
-                    }
-                }
+                
                 if (Motionlist.SelectedItem != null)
                 {
                     string[] datas = Motionlist.SelectedItem.ToString().Split(' ');
@@ -280,6 +325,8 @@ namespace RoBoME_ver1._0
                     set_RBver();
                     set_RCservo();
                 }
+                if(nMotion.picfilename != null)
+                    Framelist.BackgroundImage = Image.FromFile(Environment.CurrentDirectory + "\\" + nMotion.picfilename);
             }
             
         }
@@ -288,6 +335,8 @@ namespace RoBoME_ver1._0
             Motion.ShowDialog();
             if (Motion.DialogResult == DialogResult.OK)
             {
+                if (Motion.picfilename != null)
+                    Framelist.BackgroundImage = Image.FromFile(Environment.CurrentDirectory + "\\" + Motion.picfilename);
                 if (File.Exists("offset.txt"))
                     using (StreamReader reader = new StreamReader(Environment.CurrentDirectory + "\\offset.txt"))
                     {
@@ -341,6 +390,7 @@ namespace RoBoME_ver1._0
                     set_RCservo();
                 }
                 Update_framelist();
+                Framelist.BackgroundImage = Image.FromFile(Environment.CurrentDirectory + "\\" + Motion.picfilename);
             }
         }
         private void saveFileToolStripMenuItem_Click(object sender, EventArgs e)    //save file
@@ -446,52 +496,6 @@ namespace RoBoME_ver1._0
         }
         private void actionToolStripMenuItem_Click(object sender, EventArgs e)      //load file
         {
-            if (File.Exists("offset.txt"))
-                using (StreamReader reader = new StreamReader(Environment.CurrentDirectory + "\\offset.txt"))
-                {
-                    string[] datas = reader.ReadToEnd().Split(delimiterChars);
-                    for (int i = 0; i < 32; i++)
-                    {
-                        offset[i] = uint.Parse(datas[i]);
-                    }
-
-                }
-            else
-                for (int i = 0; i < 32; i++)
-                {
-                    offset[i] = 0;
-                }
-            if (File.Exists("homeframe.txt"))
-                using (StreamReader reader = new StreamReader(Environment.CurrentDirectory + "\\homeframe.txt"))
-                {
-                    string[] datas = reader.ReadToEnd().Split(delimiterChars);
-                    for (int i = 0; i < 32; i++)
-                    {
-                        homeframe[i] = uint.Parse(datas[i]);
-                    }
-
-                }
-            else
-                for (int i = 0; i < 32; i++)
-                {
-                    homeframe[i] = 0;
-                }
-            if (File.Exists("Range.txt"))
-                using (StreamReader reader = new StreamReader(Environment.CurrentDirectory + "\\Range.txt"))
-                {
-                    string[] datas = reader.ReadToEnd().Split(delimiterChars);
-                    for (int i = 0; i < 32; i++)
-                    {
-                        min[i] = uint.Parse(datas[i]);
-                        Max[i] = uint.Parse(datas[i + 32]);
-                    }
-                }
-            else
-                for (int i = 0; i < 32; i++)
-                {
-                    min[i] = 600;
-                    Max[i] = 2300;
-                }
             if (Motion != null)
             {
                 if (!onPC)
@@ -684,6 +688,55 @@ namespace RoBoME_ver1._0
                     }
                 }
             }
+
+            if (File.Exists("offset.txt"))
+                using (StreamReader reader = new StreamReader(Environment.CurrentDirectory + "\\offset.txt"))
+                {
+                    string[] datas = reader.ReadToEnd().Split(delimiterChars);
+                    for (int i = 0; i < 32; i++)
+                    {
+                        offset[i] = uint.Parse(datas[i]);
+                    }
+
+                }
+            else
+                for (int i = 0; i < 32; i++)
+                {
+                    offset[i] = 0;
+                }
+            if (File.Exists("homeframe.txt"))
+                using (StreamReader reader = new StreamReader(Environment.CurrentDirectory + "\\homeframe.txt"))
+                {
+                    string[] datas = reader.ReadToEnd().Split(delimiterChars);
+                    for (int i = 0; i < 32; i++)
+                    {
+                        homeframe[i] = uint.Parse(datas[i]);
+                    }
+
+                }
+            else
+                for (int i = 0; i < 32; i++)
+                {
+                    homeframe[i] = 0;
+                }
+            if (File.Exists("Range.txt"))
+                using (StreamReader reader = new StreamReader(Environment.CurrentDirectory + "\\Range.txt"))
+                {
+                    string[] datas = reader.ReadToEnd().Split(delimiterChars);
+                    for (int i = 0; i < 32; i++)
+                    {
+                        min[i] = uint.Parse(datas[i]);
+                        Max[i] = uint.Parse(datas[i + 32]);
+                    }
+                }
+            else
+                for (int i = 0; i < 32; i++)
+                {
+                    min[i] = 600;
+                    Max[i] = 2300;
+                }
+            if (nMotion.picfilename != null)
+                Framelist.BackgroundImage = Image.FromFile(Environment.CurrentDirectory + "\\" + nMotion.picfilename);
             groupBox2.Enabled = true;
             groupBox3.Enabled = true;
             optionToolStripMenuItem.Enabled = true;
@@ -938,6 +991,7 @@ namespace RoBoME_ver1._0
                     xtext.TextChanged += new EventHandler(gototext);
                     xtext.Text = ((ME_Flag)((ME_Motion)ME_Motionlist[MotionCombo.SelectedIndex]).Events[Motionlist.SelectedIndex]).name;
                     xtext.Size = new Size(160, 22);
+                    xtext.Left += 45;
                     Framelist.Controls.Add(xlabel);
                     Framelist.Controls.Add(xtext);
 
@@ -954,9 +1008,11 @@ namespace RoBoME_ver1._0
                     xtext.TextChanged += new EventHandler(gototext);
                     xtext.Text = ((ME_Goto)((ME_Motion)ME_Motionlist[MotionCombo.SelectedIndex]).Events[Motionlist.SelectedIndex]).name;
                     xtext.Size = new Size(160, 22);
+                    xtext.Left += 45;
                     Button xbutton = new Button();
                     xbutton.Text = "set keys";
                     xbutton.Click += new EventHandler(gotobutton);
+                    xbutton.Left += 210;
                     Framelist.Controls.Add(xlabel);
                     Framelist.Controls.Add(xtext);
                     Framelist.Controls.Add(xbutton);

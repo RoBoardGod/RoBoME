@@ -39,6 +39,8 @@
             this.howToUseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.optionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.triggerlist = new System.Windows.Forms.ListBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.autocheck = new System.Windows.Forms.CheckBox();
             this.capturebutton = new System.Windows.Forms.Button();
@@ -46,19 +48,17 @@
             this.label2 = new System.Windows.Forms.Label();
             this.typecombo = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.Framelist = new System.Windows.Forms.FlowLayoutPanel();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.triggerlist = new System.Windows.Forms.ListBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.MotionTest = new System.Windows.Forms.Button();
             this.NewMotion = new System.Windows.Forms.Button();
             this.Motionlist = new System.Windows.Forms.ListBox();
             this.MotionCombo = new System.Windows.Forms.ComboBox();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.Framelist = new System.Windows.Forms.Panel();
             this.menuStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
-            this.panel1.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            this.panel1.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -70,7 +70,7 @@
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(624, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(1024, 24);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -130,14 +130,36 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.panel1);
             this.groupBox1.Controls.Add(this.Framelist);
+            this.groupBox1.Controls.Add(this.groupBox2);
+            this.groupBox1.Controls.Add(this.panel1);
             this.groupBox1.Location = new System.Drawing.Point(13, 28);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(321, 368);
+            this.groupBox1.Size = new System.Drawing.Size(720, 663);
             this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Object";
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.triggerlist);
+            this.groupBox2.Location = new System.Drawing.Point(321, 0);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(399, 95);
+            this.groupBox2.TabIndex = 2;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Trigger";
+            // 
+            // triggerlist
+            // 
+            this.triggerlist.FormattingEnabled = true;
+            this.triggerlist.ItemHeight = 12;
+            this.triggerlist.Location = new System.Drawing.Point(12, 22);
+            this.triggerlist.Name = "triggerlist";
+            this.triggerlist.ScrollAlwaysVisible = true;
+            this.triggerlist.Size = new System.Drawing.Size(371, 64);
+            this.triggerlist.TabIndex = 0;
+            this.triggerlist.MouseDown += new System.Windows.Forms.MouseEventHandler(this.triggerlist_MouseDown);
             // 
             // panel1
             // 
@@ -218,46 +240,15 @@
             this.label1.TabIndex = 3;
             this.label1.Text = "Object Type:";
             // 
-            // Framelist
-            // 
-            this.Framelist.AutoScroll = true;
-            this.Framelist.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.Framelist.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.Framelist.Location = new System.Drawing.Point(12, 94);
-            this.Framelist.Name = "Framelist";
-            this.Framelist.Size = new System.Drawing.Size(303, 270);
-            this.Framelist.TabIndex = 2;
-            // 
-            // groupBox2
-            // 
-            this.groupBox2.Controls.Add(this.triggerlist);
-            this.groupBox2.Location = new System.Drawing.Point(13, 402);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(321, 132);
-            this.groupBox2.TabIndex = 2;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Trigger";
-            // 
-            // triggerlist
-            // 
-            this.triggerlist.FormattingEnabled = true;
-            this.triggerlist.ItemHeight = 12;
-            this.triggerlist.Location = new System.Drawing.Point(12, 21);
-            this.triggerlist.Name = "triggerlist";
-            this.triggerlist.ScrollAlwaysVisible = true;
-            this.triggerlist.Size = new System.Drawing.Size(303, 100);
-            this.triggerlist.TabIndex = 0;
-            this.triggerlist.MouseDown += new System.Windows.Forms.MouseEventHandler(this.triggerlist_MouseDown);
-            // 
             // groupBox3
             // 
             this.groupBox3.Controls.Add(this.MotionTest);
             this.groupBox3.Controls.Add(this.NewMotion);
             this.groupBox3.Controls.Add(this.Motionlist);
             this.groupBox3.Controls.Add(this.MotionCombo);
-            this.groupBox3.Location = new System.Drawing.Point(340, 28);
+            this.groupBox3.Location = new System.Drawing.Point(739, 28);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(273, 506);
+            this.groupBox3.Size = new System.Drawing.Size(273, 663);
             this.groupBox3.TabIndex = 3;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Motion";
@@ -292,7 +283,7 @@
             this.Motionlist.Location = new System.Drawing.Point(7, 73);
             this.Motionlist.Name = "Motionlist";
             this.Motionlist.ScrollAlwaysVisible = true;
-            this.Motionlist.Size = new System.Drawing.Size(261, 422);
+            this.Motionlist.Size = new System.Drawing.Size(261, 579);
             this.Motionlist.TabIndex = 1;
             this.Motionlist.SelectedIndexChanged += new System.EventHandler(this.Motionlist_SelectedIndexChanged);
             this.Motionlist.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Motionlist_MouseDown);
@@ -314,21 +305,29 @@
             this.contextMenuStrip1.Name = "contextMenuStrip1";
             this.contextMenuStrip1.Size = new System.Drawing.Size(61, 4);
             // 
+            // Framelist
+            // 
+            this.Framelist.AutoScroll = true;
+            this.Framelist.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.Framelist.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.Framelist.Location = new System.Drawing.Point(12, 94);
+            this.Framelist.Name = "Framelist";
+            this.Framelist.Size = new System.Drawing.Size(700, 550);
+            this.Framelist.TabIndex = 5;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
-            this.ClientSize = new System.Drawing.Size(624, 542);
-            this.Controls.Add(this.groupBox3);
-            this.Controls.Add(this.groupBox2);
+            this.ClientSize = new System.Drawing.Size(1024, 698);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.menuStrip1);
+            this.Controls.Add(this.groupBox3);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
-            this.MaximizeBox = false;
-            this.MaximumSize = new System.Drawing.Size(640, 580);
-            this.MinimumSize = new System.Drawing.Size(640, 580);
+            this.MaximumSize = new System.Drawing.Size(1040, 980);
+            this.MinimumSize = new System.Drawing.Size(1040, 736);
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "RoBoard Motion Editor-Ver1.1";
@@ -337,9 +336,9 @@
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.groupBox1.ResumeLayout(false);
+            this.groupBox2.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
-            this.groupBox2.ResumeLayout(false);
             this.groupBox3.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -359,7 +358,6 @@
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.GroupBox groupBox3;
-        private System.Windows.Forms.FlowLayoutPanel Framelist;
         private System.Windows.Forms.ListBox Motionlist;
         private System.Windows.Forms.ComboBox MotionCombo;
         private System.Windows.Forms.Panel panel1;
@@ -373,6 +371,7 @@
         private System.Windows.Forms.Button capturebutton;
         private System.Windows.Forms.Button MotionTest;
         private System.Windows.Forms.CheckBox autocheck;
+        private System.Windows.Forms.Panel Framelist;
     }
 }
 
